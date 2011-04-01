@@ -53,10 +53,10 @@ class GameImplement implements Game {
 						break;
 					}
 					if (j + 1 == FIELD_SIZE-1) {
-						if (field[i][j + 1] == Player.CROSS) {
+						if (field[j+1][i] == Player.CROSS) {
 							return Result.CROSSES_WIN;
 						}
-						if (field[i][j + 1] == Player.NOUGHT) {
+						if (field[j+1][i] == Player.NOUGHT) {
 							return Result.NOUGHTS_WIN;
 						}
 					}
@@ -89,20 +89,20 @@ class GameImplement implements Game {
 			}
 		
 		
-		// Testing for winners at / - diagonal -- unchecked by test
+		// Testing for winners at / - diagonal -- checked by test
 		
 		for (int i = 0; i < FIELD_SIZE; i++) {
-			checkToValues = (field[FIELD_SIZE-1-i][FIELD_SIZE-1-i] == field[FIELD_SIZE-2-i][FIELD_SIZE-2-i]);
+			checkToValues = (field[i][FIELD_SIZE-1-i] == field[i+1][FIELD_SIZE-2-i]);
 			if (checkToValues) {
-			if (field[FIELD_SIZE-1-i][FIELD_SIZE-1-i] == null) {
+			if (field[i+1][FIELD_SIZE-2-i] == null) {
 				checkToValues = false;
 				break;
 			}
-			if (FIELD_SIZE-2-i == FIELD_SIZE-1) {
-				if (field[FIELD_SIZE-2-i][FIELD_SIZE-2-i] == Player.CROSS) {
+			if (i+1 == FIELD_SIZE-1) {
+				if (field[i+1][FIELD_SIZE-2-i] == Player.CROSS) {
 					return Result.CROSSES_WIN;
 				}
-				if (field[FIELD_SIZE-2-i][FIELD_SIZE-2-i] == Player.NOUGHT) {
+				if (field[i+1][FIELD_SIZE-2-i] == Player.NOUGHT) {
 					return Result.NOUGHTS_WIN;
 				}
 			}
