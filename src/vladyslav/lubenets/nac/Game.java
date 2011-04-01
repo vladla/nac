@@ -11,10 +11,10 @@ public interface Game {
 		CROSS, NOUGHT
 		}
 
-	static int FIELD_SIZE = 3;
+	public static final int FIELD_SIZE = 3;
 	
 	void restart();
 
 	Result action(Player player, int X, int Y);
-	public Player[][] getData (); 
+	Player[][] getData (); 
 }
