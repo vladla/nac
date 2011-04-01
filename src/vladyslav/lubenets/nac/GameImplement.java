@@ -5,11 +5,11 @@ import java.util.Arrays;
 class GameImplement implements Game {
 
 
-	Player[][] field = new Player[FIELD_SIZE][FIELD_SIZE];
+	private final Player[][] field = new Player[FIELD_SIZE][FIELD_SIZE];
 
 	private Player previousPlayer = null;
 
-	public Result checkWinner() {
+	private Result checkWinner() {
 		boolean checkToValues = false;
 
 		// Testing for winners at horizontal -- checked by test
@@ -133,6 +133,7 @@ class GameImplement implements Game {
 
 
 
+	@Override
 	public void restart() {
 		for (int i=0; i<FIELD_SIZE; i++) { 
 		Arrays.fill(field[i], null);
@@ -193,7 +194,7 @@ class GameImplement implements Game {
 	}
 
 	public Player[][] getData () {
-		Player[][] fieldClone = new Player[FIELD_SIZE][FIELD_SIZE];
+		Player[][] fieldClone = field.clone();
 		
 		
 		for (int i=0; i<FIELD_SIZE;i++) {
