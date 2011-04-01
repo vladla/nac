@@ -130,7 +130,7 @@ public class RunGameTest extends TestCase {
 		assertEquals(Game.Result.FIELD_BUSY, result);
 	}
 
-	public void testQuickGame() {
+	public void testWinAtNotMainDiagonal() {
 	    Result result = game.action(Player.CROSS, 1, 1);
 	    assertEquals(Result.CONTINUE, result);
 	    result = game.action(Player.NOUGHT, 1, 2);
@@ -142,4 +142,85 @@ public class RunGameTest extends TestCase {
 	    result = game.action(Player.CROSS, 2, 0);
 	    assertEquals(Result.CROSSES_WIN, result);
 	}
+	
+	public void testWinAtVertical() {
+	    Result result = game.action(Player.CROSS, 1, 0);
+	    assertEquals(Result.CONTINUE, result);
+	    result = game.action(Player.NOUGHT, 0, 0);
+	    assertEquals(Result.CONTINUE, result);
+	    result = game.action(Player.CROSS, 1, 1);
+	    assertEquals(Result.CONTINUE, result);
+	    result = game.action(Player.NOUGHT, 0, 1);
+	    assertEquals(Result.CONTINUE, result);
+	    result = game.action(Player.CROSS, 1, 2);
+	    assertEquals(Result.CROSSES_WIN, result);
+	}
+	
+	public void testSolianka() {
+		Game game1_draw = new GameImplement();
+		Game game2_nw = new GameImplement();
+		Game game3_incorrect = new GameImplement();
+		
+		Result result1 = game1_draw.action(Game.Player.CROSS, 1, 1);
+		Result result2 = game2_nw.action(Game.Player.CROSS, 1, 1);
+		Result result3 = game3_incorrect.action(Game.Player.CROSS, 1, 1);
+		assertEquals(Game.Result.CONTINUE, result1);
+		result1 = game1_draw.action(Game.Player.NOUGHT, 0, 0);
+		assertEquals(Game.Result.CONTINUE, result1);
+		result1 = game1_draw.action(Game.Player.CROSS, 1, 0);
+		
+		assertEquals(Game.Result.CONTINUE, result3);
+		
+		assertEquals(Game.Result.CONTINUE, result1);
+		result1 = game1_draw.action(Game.Player.NOUGHT, 1, 2);
+		assertEquals(Game.Result.CONTINUE, result1);
+		result1 = game1_draw.action(Game.Player.CROSS, 0, 1);
+		assertEquals(Game.Result.CONTINUE, result1);
+		result1 = game1_draw.action(Game.Player.NOUGHT, 2, 1);
+		assertEquals(Game.Result.CONTINUE, result1);
+		result1 = game1_draw.action(Game.Player.CROSS, 2, 0);
+		assertEquals(Game.Result.CONTINUE, result1);
+		result1 = game1_draw.action(Game.Player.NOUGHT, 0, 2);
+		assertEquals(Game.Result.CONTINUE, result1);
+		result1 = game1_draw.action(Game.Player.CROSS, 2, 2);
+		assertEquals(Game.Result.DRAW, result1);
+		
+
+		assertEquals(Game.Result.CONTINUE, result2);
+		result2 = game2_nw.action(Game.Player.NOUGHT, 2, 2);
+		assertEquals(Game.Result.CONTINUE, result2);
+		result2 = game2_nw.action(Game.Player.CROSS, 2, 1);
+		assertEquals(Game.Result.CONTINUE, result2);
+		result2 = game2_nw.action(Game.Player.NOUGHT, 0, 1);
+		assertEquals(Game.Result.CONTINUE, result2);
+		result2 = game2_nw.action(Game.Player.CROSS, 0, 0);
+		assertEquals(Game.Result.CONTINUE, result2);
+		result2 = game2_nw.action(Game.Player.NOUGHT, 0, 2);
+		assertEquals(Game.Result.CONTINUE, result2);
+		result2 = game2_nw.action(Game.Player.CROSS, 1, 0);
+		assertEquals(Game.Result.CONTINUE, result2);
+		result2 = game2_nw.action(Game.Player.NOUGHT, 1, 2);
+		assertEquals(Game.Result.NOUGHTS_WIN, result2);
+		
+
+
+		result3 = game3_incorrect.action(Game.Player.CROSS, 0, 0);
+		assertEquals(Game.Result.EXPECTED_NOUGHT, result3);
+	}
+	
+	public void testGetDataModification() {
+		
+		Result result1 = game.action(Player.NOUGHT, 0, 0);
+	    assertEquals(Result.CONTINUE, result1);
+	    result1 = game.action(Player.CROSS, 1, 1);
+	    assertEquals(Result.CONTINUE, result1);
+	    result1 = game.action(Player.NOUGHT, 0, 1);
+	    assertEquals(Result.CONTINUE, result1);
+		Player[][] result = game.getData();
+		result[0][0] = null;
+		Player[][] result2 = game.getData();
+		assertEquals(Player.NOUGHT, result2[0][0]);
+	    
+	}
+
 }
