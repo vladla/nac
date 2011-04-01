@@ -5,9 +5,9 @@ import vladyslav.lubenets.nac.Game.Result;
 import junit.framework.TestCase;
 
 public class RunGameTest extends TestCase {
-	
+
 	Game game;
-	
+
 	@Override
     public void setUp() {
 		game = new GameImplement();
@@ -117,10 +117,10 @@ public class RunGameTest extends TestCase {
 		result = game.action(Game.Player.NOUGHT, 0, 1);
 		assertEquals(Game.Result.NEED_RESTART, result);
 		game.restart();
-		
+
 		result = game.action(Game.Player.CROSS, 1, 1);
 		assertEquals(Game.Result.CONTINUE, result);
-	
+
 	}
 
 	public void testFieldIsBusy() {
