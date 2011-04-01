@@ -1,5 +1,6 @@
 package vladyslav.lubenets.nac;
 
+import vladyslav.lubenets.nac.Game.Player;
 import vladyslav.lubenets.nac.Game.Result;
 import junit.framework.TestCase;
 
@@ -127,5 +128,18 @@ public class RunGameTest extends TestCase {
 		assertEquals(Game.Result.CONTINUE, result);
 		result = game.action(Game.Player.NOUGHT, 1, 1);
 		assertEquals(Game.Result.FIELD_BUSY, result);
+	}
+
+	public void testQuickGame() {
+	    Result result = game.action(Player.CROSS, 1, 1);
+	    assertEquals(Result.CONTINUE, result);
+	    result = game.action(Player.NOUGHT, 1, 2);
+	    assertEquals(Result.CONTINUE, result);
+	    result = game.action(Player.CROSS, 0, 2);
+	    assertEquals(Result.CONTINUE, result);
+	    result = game.action(Player.NOUGHT, 2, 2);
+	    assertEquals(Result.CONTINUE, result);
+	    result = game.action(Player.CROSS, 2, 0);
+	    assertEquals(Result.CROSSES_WIN, result);
 	}
 }
