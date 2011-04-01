@@ -7,7 +7,8 @@ public class RunGameTest extends TestCase {
 	
 	Game game;
 	
-	public void setUp() {
+	@Override
+    public void setUp() {
 		game = new GameImplement();
 	}
 

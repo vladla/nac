@@ -133,7 +133,6 @@ class GameImplement implements Game {
 
 
 
-	@Override
 	public void restart() {
 		for (int i=0; i<FIELD_SIZE; i++) { 
 		Arrays.fill(field[i], null);
