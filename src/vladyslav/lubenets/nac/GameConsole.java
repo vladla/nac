@@ -10,7 +10,7 @@ public class GameConsole {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     // Constants
-    static final String PATTERN_REG_EXP = "[x|o|X|O][\\s][0-9]{1,}[\\s][0-9]{1,}";
+    static final String PATTERN_REG_EXP = "\\s*[xoXO]\\s+\\d+\\s+\\d+\\s*";
     // Constants for the field
     static final String END_OF_THE_STRING = "";
     static final String SEPARATOR = "|";
