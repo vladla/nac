@@ -10,14 +10,12 @@ public class GameConsole {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     // Constants
-    static final String PATTERN_REG_EXP = "[x|o|X|O]+[\\s]+[0-2]+[\\s]+[0-2]";
-    static final String QUIT = "quit";
+    static final String PATTERN_REG_EXP = "[x|o|X|O][\\s][0-9]{1,}[\\s][0-9]{1,}";
     // Constants for the field
     static final String END_OF_THE_STRING = "";
     static final String SEPARATOR = "|";
     static final String INTERMEDIATE_LINE = "---|---|---";
 
-    // Pri vihode - bue bue
     public final Pattern pattern = Pattern.compile(PATTERN_REG_EXP);
 
     public boolean doMatch(String word) {
@@ -43,7 +41,7 @@ public class GameConsole {
                 if (j == game.getData().length - 1) {
                     System.out.println(END_OF_THE_STRING);
                 }
-                if (j == game.getData().length - 1) {
+                if (j == game.getData().length - 1 && !(i == game.getData().length - 1)) {
                     System.out.println(INTERMEDIATE_LINE);
                 }
             }
@@ -51,15 +49,15 @@ public class GameConsole {
 
     }
 
-    public String inputString() throws IOException {
-        String inputString, result = "";
-        inputString = br.readLine();
-        result = result + inputString;
-
-        if (inputString == QUIT) {
-            return QUIT;
+    public String inputString() {
+        String brReader = "";
+        try {
+            brReader = br.readLine();
+        } catch (IOException ex) {
+            return RunGame.QUIT;
         }
-        return result;
+        
+        return brReader;
 
     }
 
