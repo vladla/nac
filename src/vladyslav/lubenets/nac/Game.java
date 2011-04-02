@@ -4,7 +4,7 @@ public interface Game {
 
 	public enum Result {
 		CONTINUE, NOUGHTS_WIN, CROSSES_WIN, DRAW, INVALID_PARAMS, EXPECTED_CROSS, EXPECTED_NOUGHT, 
-		NEED_RESTART, FIELD_BUSY
+		NEED_RESTART, FIELD_BUSY, SUCCESS
 	}
 
 	public enum Player {
