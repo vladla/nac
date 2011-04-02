@@ -155,7 +155,9 @@ class GameImplement implements Game {
 	public Result action(Player player, int x, int y) {
 		
 	    if (x<0 || y<0) {
+	        
 	        return Result.INVALID_PARAMS;
+	    
 	    }
 	    
 	    if (flagToRestart) {
