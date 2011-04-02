@@ -32,7 +32,7 @@ public class RunGame {
 
 			while (!(inputParameters.equals(QUIT))) {
 
-				inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ").trim();
+				inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
 				
 				
                 if (inputParameters.equals(RESTART)) {
@@ -50,18 +50,23 @@ public class RunGame {
 				}
 
 				String[] inputParametersArray = inputParameters.split(" ");
+				int beginIndex = 0;
+				if (inputParametersArray[0].equals("")) {
+				    beginIndex = 1;
+				}
 				
-				if (inputParametersArray[0].equals(PLAYER_FIRST_FIRST_TYPE)
-						|| inputParametersArray[0].equals(PLAYER_FIRST_SECOND_TYPE)) {
+				
+				if (inputParametersArray[beginIndex].equals(PLAYER_FIRST_FIRST_TYPE)
+						|| inputParametersArray[beginIndex].equals(PLAYER_FIRST_SECOND_TYPE)) {
 					player = Game.Player.CROSS;
 				}
-				if (inputParametersArray[0].equals(PLAYER_SECOND_FIRST_TYPE)
-						|| inputParametersArray[0].equals(PLAYER_SECOND_SECOND_TYPE)) {
+				if (inputParametersArray[beginIndex].equals(PLAYER_SECOND_FIRST_TYPE)
+						|| inputParametersArray[beginIndex].equals(PLAYER_SECOND_SECOND_TYPE)) {
 					player = Game.Player.NOUGHT;
 				}
 				
-				int xPosition = Integer.parseInt(inputParametersArray[1]);
-				int yPosition = Integer.parseInt(inputParametersArray[2]);
+				int xPosition = Integer.parseInt(inputParametersArray[beginIndex+1]);
+				int yPosition = Integer.parseInt(inputParametersArray[beginIndex+2]);
 
 				Result result = game.action(player, xPosition, yPosition);
 				gameConsole.drawGameField(game);
