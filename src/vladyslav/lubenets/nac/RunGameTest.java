@@ -83,6 +83,8 @@ public class RunGameTest extends TestCase {
 	public void testErrorBadInteger() {
 		Result result = game.action(Game.Player.CROSS, 5, 1);
 		assertEquals(Game.Result.INVALID_PARAMS, result);
+        result = game.action(Game.Player.CROSS, -1, 1);
+        assertEquals(Game.Result.INVALID_PARAMS, result);
 	}
 
 //	public void testErrorBadXOSymbol() {
