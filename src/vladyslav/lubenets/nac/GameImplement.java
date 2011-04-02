@@ -3,6 +3,7 @@ package vladyslav.lubenets.nac;
 import java.util.Arrays;
 
 class GameImplement implements Game {
+    boolean flagToRestart = false;
 
 
 	private final Player[][] field = new Player[FIELD_SIZE][FIELD_SIZE];
@@ -27,9 +28,11 @@ class GameImplement implements Game {
 					}
 					if (j + 1 == FIELD_SIZE-1) {
 						if (field[i][j + 1] == Player.CROSS) {
+						    flagToRestart = true;
 							return Result.CROSSES_WIN;
 						}
 						if (field[i][j + 1] == Player.NOUGHT) {
+						    flagToRestart = true;
 							return Result.NOUGHTS_WIN;
 						}
 					}
@@ -54,10 +57,12 @@ class GameImplement implements Game {
 					}
 					if (j + 1 == FIELD_SIZE-1) {
 						if (field[j+1][i] == Player.CROSS) {
-							return Result.CROSSES_WIN;
+                            flagToRestart = true;
+						    return Result.CROSSES_WIN;
 						}
 						if (field[j+1][i] == Player.NOUGHT) {
-							return Result.NOUGHTS_WIN;
+                            flagToRestart = true;
+						    return Result.NOUGHTS_WIN;
 						}
 					}
 				} else {
@@ -77,10 +82,12 @@ class GameImplement implements Game {
 					}
 					if (i + 1 == FIELD_SIZE-1) {
 						if (field[i+1][i+1] == Player.CROSS) {
-							return Result.CROSSES_WIN;
+                            flagToRestart = true;
+						    return Result.CROSSES_WIN;
 						}
 						if (field[i+1][i+1] == Player.NOUGHT) {
-							return Result.NOUGHTS_WIN;
+	                        flagToRestart = true;
+						    return Result.NOUGHTS_WIN;
 						}
 					}
 				} else {
@@ -100,10 +107,12 @@ class GameImplement implements Game {
 			}
 			if (i+1 == FIELD_SIZE-1) {
 				if (field[i+1][FIELD_SIZE-2-i] == Player.CROSS) {
-					return Result.CROSSES_WIN;
+                    flagToRestart = true;
+				    return Result.CROSSES_WIN;
 				}
 				if (field[i+1][FIELD_SIZE-2-i] == Player.NOUGHT) {
-					return Result.NOUGHTS_WIN;
+                    flagToRestart = true;
+				    return Result.NOUGHTS_WIN;
 				}
 			}
 		} else {
@@ -118,7 +127,8 @@ class GameImplement implements Game {
 					flagForLoopExit = true;
 					break;
 				} else if (i == FIELD_SIZE - 1 && k == FIELD_SIZE - 1) {
-					return Result.DRAW;
+                    flagToRestart = true;
+				    return Result.DRAW;
 				}
 
 			} 
@@ -138,19 +148,23 @@ class GameImplement implements Game {
 		Arrays.fill(field[i], null);
 		}
 		previousPlayer = null;
+        flagToRestart = false;
 		
 	}
 
 	public Result action(Player player, int x, int y) {
 		
-
+	    if (flagToRestart) {
+	        return Result.NEED_RESTART;
+	    }
+	    
+	    
 		if (x > FIELD_SIZE - 1 || y > FIELD_SIZE - 1) {
 			return Result.INVALID_PARAMS;
 		}
 
 
 		boolean flagToLoopExit = false;
-
 		
 		for (int i = 0; i < FIELD_SIZE; i++) {
 			for (int j = 0; j < FIELD_SIZE; j++) {
