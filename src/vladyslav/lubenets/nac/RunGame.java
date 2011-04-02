@@ -1,6 +1,6 @@
 package vladyslav.lubenets.nac;
 
-import java.io.IOException;
+
 
 import vladyslav.lubenets.nac.Game.Player;
 import vladyslav.lubenets.nac.Game.Result;
@@ -9,15 +9,18 @@ public class RunGame {
     static final String HELLO_MESSAGE = "Please, write your char, x and y coordinates as follow x 1 2.";
     static final String STRING_IS_NOT_VALID = "String is not a valid format!";
     static final String ERROR_OCCURED = "Error occured!!!";
-    static final char PLAYER_FIRST_FIRST_TYPE = 'x';
-    static final char PLAYER_FIRST_SECOND_TYPE = 'X';
-    static final char PLAYER_SECOND_FIRST_TYPE = 'o';
-    static final char PLAYER_SECOND_SECOND_TYPE = 'O';
+    static final String PLAYER_FIRST_FIRST_TYPE = "x";
+    static final String PLAYER_FIRST_SECOND_TYPE = "X";
+    static final String PLAYER_SECOND_FIRST_TYPE = "o";
+    static final String PLAYER_SECOND_SECOND_TYPE = "O";
     static final String THANK_FOR_GAME = "Thank you for the game! Bye-bye!";
+    static final String QUIT = "quit";
+    static final String RESTART = "restart";
+    static final String GAME_RESTARTED = "Game restarted!";
     
     public static void main(String[] args) {
 
-        String inputString = "";
+        String inputParameters = "";
 
         
 		Game game = new GameImplement();
@@ -26,41 +29,46 @@ public class RunGame {
 		
 		System.out.println(HELLO_MESSAGE);
 
-		try {
-			while (!(inputString.equals(GameConsole.QUIT))) {
 
-				inputString = gameConsole.inputString();
+			while (!(inputParameters.equals(QUIT))) {
 
-				if (!(gameConsole.doMatch(inputString))) {
-				    if (!(inputString.equals(GameConsole.QUIT))) {
+				inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ").trim();
+				
+				
+                if (inputParameters.equals(RESTART)) {
+                    game.restart();
+                    System.out.println(GAME_RESTARTED);
+                    System.out.println(HELLO_MESSAGE);
+                    continue;
+                }
+
+				if (!(gameConsole.doMatch(inputParameters))) {
+				    if (!(inputParameters.equals(QUIT))) {
 				        System.out.println(STRING_IS_NOT_VALID);
 				    }
 					continue;
 				}
 
-				if (inputString.charAt(0) == PLAYER_FIRST_FIRST_TYPE
-						|| inputString.charAt(0) == PLAYER_FIRST_SECOND_TYPE) {
+				String[] inputParametersArray = inputParameters.split(" ");
+				
+				if (inputParametersArray[0].equals(PLAYER_FIRST_FIRST_TYPE)
+						|| inputParametersArray[0].equals(PLAYER_FIRST_SECOND_TYPE)) {
 					player = Game.Player.CROSS;
 				}
-				if (inputString.charAt(0) == PLAYER_SECOND_FIRST_TYPE
-						|| inputString.charAt(0) == PLAYER_SECOND_SECOND_TYPE) {
+				if (inputParametersArray[0].equals(PLAYER_SECOND_FIRST_TYPE)
+						|| inputParametersArray[0].equals(PLAYER_SECOND_SECOND_TYPE)) {
 					player = Game.Player.NOUGHT;
 				}
+				
+				int xPosition = Integer.parseInt(inputParametersArray[1]);
+				int yPosition = Integer.parseInt(inputParametersArray[2]);
 
-				int x_position = Integer.parseInt(String.valueOf(inputString
-						.charAt(2)));
-				int y_position = Integer.parseInt(String.valueOf(inputString
-						.charAt(4)));
-
-				Result result = game.action(player, x_position, y_position);
+				Result result = game.action(player, xPosition, yPosition);
 				gameConsole.drawGameField(game);
 				System.out.println(result);
 
 			} System.out.println(THANK_FOR_GAME);
-		} catch (IOException e) {
-			System.out.println(ERROR_OCCURED);
-			e.printStackTrace();
-		}
+		} 	
+		
 
 	}
-}
