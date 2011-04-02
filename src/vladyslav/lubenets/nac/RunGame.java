@@ -1,3 +1,4 @@
+package vladyslav.lubenets.nac;
 
 
 import vladyslav.lubenets.nac.game.Game;
