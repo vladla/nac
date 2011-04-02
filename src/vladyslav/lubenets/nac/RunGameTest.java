@@ -222,5 +222,22 @@ public class RunGameTest extends TestCase {
 		assertEquals(Player.NOUGHT, result2[0][0]);
 	    
 	}
+    
+	public void testRestartAfterQuickGame() {
+        Result result = game.action(Game.Player.CROSS, 1, 1);
+        assertEquals(Game.Result.CONTINUE, result);
+        result = game.action(Game.Player.NOUGHT, 0, 1);
+        assertEquals(Game.Result.CONTINUE, result);
+        result = game.action(Game.Player.CROSS, 0, 0);
+        assertEquals(Game.Result.CONTINUE, result);
+        result = game.action(Game.Player.NOUGHT, 0, 2);
+        assertEquals(Game.Result.CONTINUE, result);
+        result = game.action(Game.Player.CROSS, 2, 2);
+        assertEquals(Game.Result.CROSSES_WIN, result);
+        result = game.action(Game.Player.NOUGHT, 0, 2);
+        assertEquals(Game.Result.NEED_RESTART, result);
+        
+    }
+
 
 }
