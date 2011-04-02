@@ -1,9 +1,9 @@
-package vladyslav.lubenets.nac.game;
 
+
+import vladyslav.lubenets.nac.game.Game;
 import vladyslav.lubenets.nac.game.Game.Player;
 import vladyslav.lubenets.nac.game.Game.Result;
-
-
+import vladyslav.lubenets.nac.game.GameImplement;
 
 
 public class RunGame {

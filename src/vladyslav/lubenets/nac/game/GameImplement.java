@@ -5,7 +5,7 @@ package vladyslav.lubenets.nac.game;
 import java.util.Arrays;
 
 
-class GameImplement implements Game {
+public class GameImplement implements Game {
     boolean flagToRestart = false;
 
 

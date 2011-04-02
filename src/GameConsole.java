@@ -1,4 +1,4 @@
-package vladyslav.lubenets.nac.game;
+
 
 
 
@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import vladyslav.lubenets.nac.game.Game;
 
 
 
