@@ -1,7 +1,7 @@
 package vladyslav.lubenets.nac.network;
 
 import junit.framework.TestCase;
-import vladyslav.lubenets.nac.game.Game.Result;
+import vladyslav.lubenets.nac.network.SocketWrapper.Result;
 import vladyslav.lubenets.nac.network.SocketWrapper.State;
 
 

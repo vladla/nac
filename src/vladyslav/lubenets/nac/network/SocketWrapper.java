@@ -1,6 +1,5 @@
 package vladyslav.lubenets.nac.network;
 
-import vladyslav.lubenets.nac.game.Game.Result;
 
 public class SocketWrapper {
 
@@ -8,6 +7,9 @@ public class SocketWrapper {
         OPEN, CLOSED;
     }
 
+    public enum Result {
+        SUCCESS, FAIL
+    }
 
     public Result connect(String string, int i) {
         // TODO Auto-generated method stub
