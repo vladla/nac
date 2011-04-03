@@ -6,12 +6,14 @@ import vladyslav.lubenets.nac.network.SocketWrapper.State;
 
 
 public class NetworkTest extends TestCase {
-    SocketWrapper socketWrapper; 
-
+    public static final String STRING_TO_WRITE = "Some information to transport";
+    SocketWrapper socketWrapperServer; 
+    SocketWrapper socketWrapperClient; 
     
     @Override
     public void setUp() {
-        socketWrapper = new SocketWrapper();
+        socketWrapperServer = new SocketWrapper();
+        socketWrapperClient = new SocketWrapper();        
     }
 
     
@@ -19,101 +21,72 @@ public class NetworkTest extends TestCase {
     // Server side testing
     
     public void testServerCreateSocket() {
-        Result result = socketWrapper.create(1234);
+        Result result = socketWrapperServer.create(1234);
         assertEquals(result, Result.SUCCESS);
         
-        Result result1 = socketWrapper.connect("172.0.0.1", 1234);
+        Result result1 = socketWrapperServer.connect("172.0.0.1", 1234);
         assertEquals(result1, Result.FAIL);
                 
-        SocketWrapper.State state = socketWrapper.getState();
+        SocketWrapper.State state = socketWrapperServer.getState();
         assertEquals(state, State.OPEN);
         
-        socketWrapper.close();
+        socketWrapperServer.close();
         
-        state = socketWrapper.getState();
+        state = socketWrapperServer.getState();
         assertEquals(state, State.CLOSED);
                 
     }
 
-    
-    public void testServerWritting() {
-        Result result = socketWrapper.write("The string for writting...");
+
+    public void testSocketReading() {
+        Result result = socketWrapperServer.create(1234);
         assertEquals(result, Result.SUCCESS);
+        
+        Result result2 = socketWrapperClient.connect("172.0.0.1", 1234);
+        assertEquals(result2, Result.SUCCESS);
 
+        Result result3 = socketWrapperClient.write(STRING_TO_WRITE);
+        assertEquals(result3, Result.SUCCESS);
+
+        String result4 = socketWrapperServer.read();
+        assertEquals(result4, Result.SUCCESS);
+
+        Result result5 = socketWrapperServer.write(STRING_TO_WRITE);
+        assertEquals(result5, Result.SUCCESS);
         
-        SocketWrapper.State state = socketWrapper.getState();
-        assertEquals(state, State.OPEN);
+        String result6 = socketWrapperClient.read();
+        assertEquals(result6, Result.SUCCESS);
         
-        socketWrapper.close();
+        socketWrapperServer.close();
         
-        state = socketWrapper.getState();
-        assertEquals(state, State.CLOSED);
+        assertEquals(socketWrapperServer.getState(), State.CLOSED);
+
+
+        socketWrapperClient.close();
+        
+        assertEquals(socketWrapperClient.getState(), State.CLOSED);
 
     }
 
-    public void testServerReading() {
-        String result = socketWrapper.read();
-        assertEquals(result, "test");
-        
-        
-        SocketWrapper.State state = socketWrapper.getState();
-        assertEquals(state, State.OPEN);
-        
-        socketWrapper.close();
-        
-        state = socketWrapper.getState();
-        assertEquals(state, State.CLOSED);
-
-    }
-    
     //Client side testing
 
     public void testClientEstablishSocketConnection() {
-        Result result = socketWrapper.connect("127.0.0.1", 1234);
+        Result result = socketWrapperServer.connect("127.0.0.1", 1234);
         assertEquals(result, Result.SUCCESS);
         
-        Result result1 = socketWrapper.create(1234);
+        Result result1 = socketWrapperServer.create(1234);
         assertEquals(result1, Result.FAIL);
         
         
-        SocketWrapper.State state = socketWrapper.getState();
+        SocketWrapper.State state = socketWrapperServer.getState();
         assertEquals(state, State.OPEN);
         
-        socketWrapper.close();
+        socketWrapperServer.close();
         
-        state = socketWrapper.getState();
+        state = socketWrapperServer.getState();
         assertEquals(state, State.CLOSED);
 
     }
 
     
-    public void testClientWritting() {
-        Result result = socketWrapper.write("The string for writting...");
-        assertEquals(result, Result.SUCCESS);
-
-        SocketWrapper.State state = socketWrapper.getState();
-        assertEquals(state, State.OPEN);
-        
-        socketWrapper.close();
-        
-        state = socketWrapper.getState();
-        assertEquals(state, State.CLOSED);
-
-    }
-
-    public void testClientReading() {
-        String result = socketWrapper.read();
-        assertEquals(result, Result.SUCCESS);
-
-        SocketWrapper.State state = socketWrapper.getState();
-        assertEquals(state, State.OPEN);
-        
-        socketWrapper.close();
-        
-        state = socketWrapper.getState();
-        assertEquals(state, State.CLOSED);
-
-    }
-    
-
 }
