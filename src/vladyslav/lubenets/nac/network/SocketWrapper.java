@@ -4,8 +4,10 @@ package vladyslav.lubenets.nac.network;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 
@@ -13,7 +15,7 @@ import java.net.SocketAddress;
 public class SocketWrapper {
 //    Socket clientSocket;
 //    ServerSocket serverSocket;
-//    PrintWriter out = null;
+    PrintWriter out = null;
     BufferedReader in = null;
 //    boolean flagServerCreated = false;
 //    
@@ -151,13 +153,25 @@ public class SocketWrapper {
             return returnFromFtp;
             
         } catch (IOException e) {
-            System.out.println("");
+            System.out.println("Input error!");
         }
         return null;
+        }
 
-        
-        
+    public String simplyServer() {
+        try {
+            int port = 1234;
+            String stringToWrite = "Test";
+            ServerSocket serverSocket = new ServerSocket(port);
+
+            // Wait for connection from client.
+            Socket socket = serverSocket.accept();
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.write(stringToWrite);
+        } catch (IOException e) {
+            System.out.println("Input error!");
+        }
+        return null;
     }
-
 
 }
