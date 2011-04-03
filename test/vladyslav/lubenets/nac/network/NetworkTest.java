@@ -16,14 +16,19 @@ public class NetworkTest extends TestCase {
         socketWrapperClient = new SocketWrapper();        
     }
 
-    
+    @Override
+    public void tearDown() {
+        socketWrapperServer.close();
+        socketWrapperClient.close();
+        
+    }    
    
     
     public void testServerCreateSocket() {
         Result result = socketWrapperServer.create(1234);
         assertEquals(result, Result.SUCCESS);
         
-        result = socketWrapperServer.connect("172.0.0.1", 1234);
+        result = socketWrapperServer.connect("127.0.0.1", 1234);
         assertEquals(result, Result.FAIL);
                 
         SocketWrapper.State state = socketWrapperServer.getState();
@@ -38,37 +43,34 @@ public class NetworkTest extends TestCase {
 
 
     public void testSocketReading() {
+        
         Result result = socketWrapperServer.create(1234);
         assertEquals(result, Result.SUCCESS);
         
-        result = socketWrapperClient.connect("172.0.0.1", 1234);
-        assertEquals(result, Result.SUCCESS);
-
-        result = socketWrapperClient.write(STRING_TO_WRITE);
-        assertEquals(result, Result.SUCCESS);
-
-        String resultString = socketWrapperServer.read();
-        assertEquals(resultString, STRING_TO_WRITE);
-
-        result = socketWrapperServer.write(STRING_TO_WRITE);
+        result = socketWrapperClient.connect("127.0.0.1", 1234);
         assertEquals(result, Result.SUCCESS);
         
-        resultString = socketWrapperClient.read();
+
+        result = socketWrapperClient.writeByClient(STRING_TO_WRITE);
+        assertEquals(result, Result.SUCCESS);
+
+        String resultString = socketWrapperServer.readByServer();
+        assertEquals(resultString, STRING_TO_WRITE);
+
+        result = socketWrapperServer.writeByServer(STRING_TO_WRITE);
+        assertEquals(result, Result.SUCCESS);
+        
+        resultString = socketWrapperClient.readByClient();
         assertEquals(resultString, STRING_TO_WRITE);
         
         socketWrapperServer.close();
-        
         assertEquals(socketWrapperServer.getState(), State.CLOSED);
 
 
         socketWrapperClient.close();
-        
         assertEquals(socketWrapperClient.getState(), State.CLOSED);
 
     }
-
-    //Client side testing
-
 
     public void testClientCreationFaild() {
         Result result = socketWrapperServer.create(1234);
@@ -81,4 +83,6 @@ public class NetworkTest extends TestCase {
         assertEquals(result, Result.FAIL);
                 
     }
+    
+
 }
