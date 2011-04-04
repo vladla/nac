@@ -17,6 +17,11 @@ public class SocketWrapper {
 //    ServerSocket serverSocket;
     PrintWriter out = null;
     BufferedReader in = null;
+    
+    public static final String inAddress = "127.0.0.1";
+    public static final int pt = 1234;
+    
+    
 //    boolean flagServerCreated = false;
 //    
 //    
@@ -26,9 +31,9 @@ public class SocketWrapper {
 //        OPEN, CLOSED;
 //    }
 //
-//    public enum Result {
-//        SUCCESS, FAIL, ERROR
-//    }
+    public enum Result {
+        SUCCESS, FAIL, ERROR
+    }
 //
 //    public Result connect(String host, @SuppressWarnings("hiding") int portNumber) {
 //        
@@ -139,18 +144,19 @@ public class SocketWrapper {
 //            return Result.FAIL;
 //    }
 
-    public String stringFromTheFtp() {
+    public String client(String outInetAddress, int outPort) {
         try {
-            InetAddress inetAddress = InetAddress.getByName("ftp.dlink.com");
-            int port = 21;
+            InetAddress inetAddress = InetAddress.getByName(outInetAddress);
+            int port = outPort;
             SocketAddress socketAddress = new InetSocketAddress(inetAddress, port);
             
             Socket socket = new Socket();
             int timeoutMs = 2000;   
             socket.connect(socketAddress, timeoutMs);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));           
-            String returnFromFtp = in.readLine();
-            return returnFromFtp;
+            String returnFromSocket = in.readLine();
+            socket.close();
+            return returnFromSocket;
             
         } catch (IOException e) {
             System.out.println("Input error!");
@@ -158,18 +164,25 @@ public class SocketWrapper {
         return null;
         }
 
-    public String simplyServer() {
+    public void writeToSocket(Socket socket) {
         try {
-            int port = 1234;
-            String stringToWrite = "Test";
-            ServerSocket serverSocket = new ServerSocket(port);
-
-            // Wait for connection from client.
-            Socket socket = serverSocket.accept();
+            String stringToWrite = NetworkTest.FTP_RESULT;
             out = new PrintWriter(socket.getOutputStream(), true);
             out.write(stringToWrite);
         } catch (IOException e) {
             System.out.println("Input error!");
+        }
+        return;
+    }
+    
+    public ServerSocket createServerSocket() {
+        try {
+            System.out.println("I do not sleep");
+            ServerSocket srv = new ServerSocket(pt);
+            System.out.println("1");
+            return srv;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }

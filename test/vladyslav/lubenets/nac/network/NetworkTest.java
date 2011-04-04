@@ -1,19 +1,17 @@
 package vladyslav.lubenets.nac.network;
 
 import junit.framework.TestCase;
-//import vladyslav.lubenets.nac.network.SocketWrapper.Result;
-//import vladyslav.lubenets.nac.network.SocketWrapper.State;
 
 
 public class NetworkTest extends TestCase {
 //    public static final String STRING_TO_WRITE = "Some information to transport";
-    SocketWrapper socketWrapperServer; 
-    public static final String FTP_RESULT = "220 (vsFTPd 1.2.1)";
+    SocketWrapper socketWrapper;
+    public static final String FTP_RESULT = "Test";
 //    SocketWrapper socketWrapperClient; 
 //    
     @Override
     public void setUp() {
-        socketWrapperServer = new SocketWrapper();
+        socketWrapper = new SocketWrapper();
 //        socketWrapperClient = new SocketWrapper();        
     }
 //
@@ -84,10 +82,25 @@ public class NetworkTest extends TestCase {
 //        assertEquals(result, Result.FAIL);
 //                
 //    }
-    
-    public void testClientCreationFaild() {
-        String result = socketWrapperServer.stringFromTheFtp();
-        assertEquals(result, FTP_RESULT);
-    }
 
+    
+    public void testServer() {
+        new AdditionThread();
+     //   (new Thread(new AdditionThread())).start();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
+        
+        
+        
+        String resultFromClient = socketWrapper.client(SocketWrapper.inAddress, SocketWrapper.pt);
+        assertEquals(resultFromClient, SocketWrapper.Result.SUCCESS);
+        
+        
+            }
+        
 }
