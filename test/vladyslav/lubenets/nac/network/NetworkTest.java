@@ -1,27 +1,24 @@
 package vladyslav.lubenets.nac.network;
 
+import vladyslav.lubenets.nac.game.Game.Result;
 import junit.framework.TestCase;
 
-public class NetworkTest extends TestCase {
-//    public static final String STRING_TO_WRITE = "Some information to transport";
-    SocketWrapper socketWrapper;
-    public static final String FTP_RESULT = "Test";
 
-//    SocketWrapper socketWrapperClient; 
-//    
+public class NetworkTest extends TestCase {
+    SocketWrapper socketWrapper;
+    public static final String TEST = "Test";
+    public static final String SERVER = "server";
+    public static final String CLIENT = "client";
+    
     @Override
     public void setUp() {
         socketWrapper = new SocketWrapper();
-//        socketWrapperClient = new SocketWrapper();        
     }
 
-//
-//    @Override
-//    public void tearDown() {
-//        socketWrapperServer.close();
-//        socketWrapperClient.close();
-//        
-//    }    
+    @Override
+    public void tearDown() {
+        socketWrapper.closeSocket();        
+    }    
 //   
 //    
 //    public void testServerCreateSocket() {
@@ -84,21 +81,27 @@ public class NetworkTest extends TestCase {
 //                
 //    }
 
-    public void testServer() {
+    
+    public void testServerClient() {
         new AdditionThread();
 
         try {
+            socketWrapper.creatingClientOrServer(CLIENT);
             System.out.println("wait before connection");
             Thread.sleep(5000);
-            
         } catch (InterruptedException ex) {
             // TODO Auto-generated catch block
             ex.printStackTrace();
         }
-
-        String resultFromClient = socketWrapper.client(SocketWrapper.inAddress, SocketWrapper.pt);
-        assertEquals(resultFromClient.equals(FTP_RESULT), false);
-
-    }
-
+        vladyslav.lubenets.nac.network.SocketInterface.Result result = socketWrapper.clientConnect();
+        assertEquals(result, SocketWrapper.Result.SUCCESS);
+        
+        String resultFromServer = socketWrapper.readFromSocket();
+        assertEquals(resultFromServer, TEST);
+        
+        socketWrapper.writeToSocket(TEST);
+        
+        
+            }
+        
 }

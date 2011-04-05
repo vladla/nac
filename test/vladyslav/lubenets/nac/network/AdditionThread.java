@@ -1,8 +1,6 @@
 package vladyslav.lubenets.nac.network;
 
-import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 
 public class AdditionThread implements Runnable {
@@ -17,17 +15,14 @@ public class AdditionThread implements Runnable {
     
     public void run() {
         try {
-             serverSocket = socketWrapper.createServerSocket();
-             Socket socket = serverSocket.accept();
+             socketWrapper.creatingClientOrServer(NetworkTest.SERVER);
+             socketWrapper.clientAccept();
              System.out.println("CLIENT ACCEPTED!");
-             socket.getOutputStream().write(NetworkTest.FTP_RESULT.getBytes());
-             System.out.println("DATA SENT TO: " + socket);
-             t.sleep(5000);
-        } catch (IOException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+             socketWrapper.writeToSocket(NetworkTest.TEST);
+             Thread.sleep(5000);
+             String result = socketWrapper.readFromSocket();
+             System.out.println(result);
         } catch (InterruptedException ex) {
-            // TODO Auto-generated catch block
             ex.printStackTrace();
         }
         
