@@ -19,11 +19,18 @@ public class AdditionThread implements Runnable {
         try {
              serverSocket = socketWrapper.createServerSocket();
              Socket socket = serverSocket.accept();
-             socketWrapper.writeToSocket(socket);
+             System.out.println("CLIENT ACCEPTED!");
+             socket.getOutputStream().write(NetworkTest.FTP_RESULT.getBytes());
+             System.out.println("DATA SENT TO: " + socket);
+             t.sleep(5000);
         } catch (IOException ex) {
             // TODO Auto-generated catch block
             ex.printStackTrace();
+        } catch (InterruptedException ex) {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
         }
+        
 
     }
 

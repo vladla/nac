@@ -10,6 +10,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Formatter;
 
 
 public class SocketWrapper {
@@ -153,10 +154,23 @@ public class SocketWrapper {
             Socket socket = new Socket();
             int timeoutMs = 2000;   
             socket.connect(socketAddress, timeoutMs);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));           
-            String returnFromSocket = in.readLine();
+            
+            try {
+                System.out.println("wait after connection");
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+            }
+            
+            byte[] result = new byte[10000];
+            socket.getInputStream().read(result);
+            
+            String msg = new String(result);
+            
+            System.out.println("result retrieved: " + msg);
             socket.close();
-            return returnFromSocket;
+            return msg;
             
         } catch (IOException e) {
             System.out.println("Input error!");
@@ -164,27 +178,20 @@ public class SocketWrapper {
         return null;
         }
 
-    public void writeToSocket(Socket socket) {
-        try {
-            String stringToWrite = NetworkTest.FTP_RESULT;
-            out = new PrintWriter(socket.getOutputStream(), true);
-            out.write(stringToWrite);
-        } catch (IOException e) {
-            System.out.println("Input error!");
-        }
-        return;
-    }
     
     public ServerSocket createServerSocket() {
         try {
-            System.out.println("I do not sleep");
             ServerSocket srv = new ServerSocket(pt);
-            System.out.println("1");
             return srv;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public String resultFromSocket(String msg) {
+        return msg;
     }
 
 }

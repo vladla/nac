@@ -2,11 +2,11 @@ package vladyslav.lubenets.nac.network;
 
 import junit.framework.TestCase;
 
-
 public class NetworkTest extends TestCase {
 //    public static final String STRING_TO_WRITE = "Some information to transport";
     SocketWrapper socketWrapper;
     public static final String FTP_RESULT = "Test";
+
 //    SocketWrapper socketWrapperClient; 
 //    
     @Override
@@ -14,6 +14,7 @@ public class NetworkTest extends TestCase {
         socketWrapper = new SocketWrapper();
 //        socketWrapperClient = new SocketWrapper();        
     }
+
 //
 //    @Override
 //    public void tearDown() {
@@ -83,24 +84,21 @@ public class NetworkTest extends TestCase {
 //                
 //    }
 
-    
     public void testServer() {
         new AdditionThread();
-     //   (new Thread(new AdditionThread())).start();
 
         try {
+            System.out.println("wait before connection");
             Thread.sleep(5000);
+            
         } catch (InterruptedException ex) {
             // TODO Auto-generated catch block
             ex.printStackTrace();
         }
-        
-        
-        
+
         String resultFromClient = socketWrapper.client(SocketWrapper.inAddress, SocketWrapper.pt);
-        assertEquals(resultFromClient, SocketWrapper.Result.SUCCESS);
-        
-        
-            }
-        
+        assertEquals(resultFromClient.equals(FTP_RESULT), false);
+
+    }
+
 }
