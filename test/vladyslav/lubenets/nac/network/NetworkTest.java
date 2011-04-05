@@ -1,6 +1,5 @@
 package vladyslav.lubenets.nac.network;
 
-import vladyslav.lubenets.nac.game.Game.Result;
 import junit.framework.TestCase;
 
 
