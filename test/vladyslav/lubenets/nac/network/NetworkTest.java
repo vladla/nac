@@ -18,8 +18,8 @@ public class NetworkTest extends TestCase {
     public void tearDown() {
         socketWrapper.closeSocket();        
     }    
-//   
-//    
+
+    
 //    public void testServerCreateSocket() {
 //        Result result = socketWrapperServer.create(1234);
 //        assertEquals(result, Result.SUCCESS);
