@@ -80,7 +80,6 @@ public class NetworkTest extends TestCase {
 //                
 //    }
 
-    
     public void testServerClient() {
         new AdditionThread();
 
@@ -94,13 +93,12 @@ public class NetworkTest extends TestCase {
         }
         vladyslav.lubenets.nac.network.SocketInterface.Result result = socketWrapper.clientConnect();
         assertEquals(result, SocketWrapper.Result.SUCCESS);
-        
+
         String resultFromServer = socketWrapper.readFromSocket();
         assertEquals(resultFromServer, TEST);
-        
+
         socketWrapper.writeToSocket(TEST);
-        
-        
-            }
+
+    }
         
 }

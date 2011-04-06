@@ -26,11 +26,16 @@ public class FakeServerThread extends Thread {
     @Override
     public void run() {
         try {
+            System.out.println("Entered to the slave thread");
             connection.accept(listenPort);
+            System.out.println("Connection accepted");
             connection.write(transferData);
+            System.out.println("Data has been send");
             connection.close();
+            System.out.println("Connection has been closed");
         } catch (SocketConnectionException ex) {
             LOGGER.log(Level.SEVERE, "ERROR", ex);
+            System.out.println("Log has been written");
         }
     }
 }
