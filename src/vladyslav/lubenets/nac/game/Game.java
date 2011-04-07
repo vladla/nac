@@ -17,4 +17,5 @@ public interface Game {
 
 	Result action(Player player, int X, int Y);
 	Player[][] getData (); 
+	Object commands(Player player, int X, int Y);
 }

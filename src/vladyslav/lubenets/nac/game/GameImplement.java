@@ -224,6 +224,13 @@ public class GameImplement implements Game {
 		}
 		return fieldClone;
 	}
+
+
+
+    public Object commands(Player player, int X, int Y) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 	
 
 }
