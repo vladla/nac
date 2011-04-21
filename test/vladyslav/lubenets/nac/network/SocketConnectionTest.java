@@ -55,7 +55,8 @@ public class SocketConnectionTest extends TestCase {
             new FakeServerThread(socketConnectionSlave, PORT, fName).start();
             Thread.sleep(TIMEOUT_FOR_THE_MAIN_THREAD);
             socketConnection.connect(BAD_HOST, BAD_PORT);
-            Serializable result = socketConnection.read();
+            socketConnection.read();
+
             
             assertFalse(true);
             
@@ -76,7 +77,7 @@ public class SocketConnectionTest extends TestCase {
             socketConnection.connect(HOST, PORT);
             socketConnection.close();
             
-            Serializable result = socketConnection.read();
+            socketConnection.read();
             assertFalse(true);
             
             

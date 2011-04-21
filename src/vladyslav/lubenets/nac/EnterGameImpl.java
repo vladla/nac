@@ -7,34 +7,13 @@ import vladyslav.lubenets.nac.game.Game.Player;
 import vladyslav.lubenets.nac.game.Game.Result;
 import vladyslav.lubenets.nac.network.SocketConnection;
 import vladyslav.lubenets.nac.network.SocketConnection.SocketConnectionException;
+import vladyslav.lubenets.nac.network.TransportObject;
 
 public class EnterGameImpl implements EnterGame {
-    
-    Object[] dataToObject(Player player, int xPosition, int yPosition) {
-        Object[] objects = new Object[3];
-        objects[0] = player;
-        objects[1] = xPosition;
-        objects[2] = yPosition;
-        return objects;
-    }
-    
-    Player objectToPlayer(Object[] object) {
-        return (Player) object[0];
-        
-    }
 
-    int objectToXPosition(Object[] object) {
-        return (Integer) object[1];
-        
-    }
-    
-    int objectToYPosition(Object[] object) {
-        return (Integer) object[2];
-        
-    }
+    public TransportObject gameLogic(String inputParameters, Game game, GameConsole gameConsole, Player playerType, Player player, boolean firstMovePlayer) {
+        Player playerInside = null;
 
-    
-    public Object[] gameLogic(String inputParameters, Game game, GameConsole gameConsole, Player playerType, Player player, boolean firstMovePlayer) {
         if (inputParameters.equals(RunGameWithNet.RESTART)) {
             game.restart();
             System.out.println(RunGameWithNet.GAME_RESTARTED);
@@ -56,15 +35,15 @@ public class EnterGameImpl implements EnterGame {
         }
 
         if (inputParametersArray[beginIndex].equals(RunGameWithNet.PLAYER_FIRST_FIRST_TYPE) || inputParametersArray[beginIndex].equals(RunGameWithNet.PLAYER_FIRST_SECOND_TYPE)) {
-            player = Game.Player.CROSS;
+            playerInside = Game.Player.CROSS;
         }
         if (inputParametersArray[beginIndex].equals(RunGameWithNet.PLAYER_SECOND_FIRST_TYPE) || inputParametersArray[beginIndex].equals(RunGameWithNet.PLAYER_SECOND_SECOND_TYPE)) {
-            player = Game.Player.NOUGHT;
+            playerInside = Game.Player.NOUGHT;
         }
 
         if (firstMovePlayer) {
             if (!player.equals(playerType)) {
-                firstMovePlayer = false;
+                // firstMovePlayer = false;
                 System.out.println(RunGameWithNet.CANT_MOVE);
                 return null;
             }
@@ -73,12 +52,14 @@ public class EnterGameImpl implements EnterGame {
         int xPosition = Integer.parseInt(inputParametersArray[beginIndex + 1]);
         int yPosition = Integer.parseInt(inputParametersArray[beginIndex + 2]);
 
-        Object[] objectReturn = dataToObject(player, xPosition, yPosition);
+        TransportObject transportObject = new TransportObject();
+        transportObject.setPlayer(playerInside);
+        transportObject.setxPosition(Integer.valueOf(xPosition));
+        transportObject.setyPosition(Integer.valueOf(yPosition));
 
-        return objectReturn;
+        return transportObject;
     }
 
-    
     public void enterGame(Game game, GameConsole gameConsole, Player playerType) {
 
         boolean firstMovePlayer = true;
@@ -117,10 +98,12 @@ public class EnterGameImpl implements EnterGame {
             }
 
             if (firstMovePlayer) {
-                if (!player.equals(playerType)) {
-                    firstMovePlayer = false;
-                    System.out.println(RunGameWithNet.CANT_MOVE);
-                    continue;
+                if (player != null) {
+                    if (!player.equals(playerType)) {
+                        firstMovePlayer = false;
+                        System.out.println(RunGameWithNet.CANT_MOVE);
+                        continue;
+                    }
                 }
             }
 
@@ -140,24 +123,24 @@ public class EnterGameImpl implements EnterGame {
         boolean firstMovePlayer = true;
         String inputParameters = "";
         Player player = null;
-        final SocketConnection connection = null;
+        SocketConnection connection = null;
 
         try {
             connection.accept(port);
             while (!(inputParameters.equals(RunGameWithNet.QUIT))) {
                 inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
-                Object[] objectReturn = gameLogic(inputParameters, game, gameConsole, playerType, player, firstMovePlayer);
-                connection.write(objectReturn);
-                player = objectToPlayer(objectReturn);
-                int xPosition = objectToXPosition(objectReturn);
-                int yPosition = objectToYPosition(objectReturn);
+                TransportObject objectReturn = gameLogic(inputParameters, game, gameConsole, playerType, player, firstMovePlayer);
+                connection.write((Serializable) objectReturn);
+                player = objectReturn.getPlayer();
+                int xPosition = objectReturn.getxPosition().intValue();
+                int yPosition = objectReturn.getyPosition().intValue();
                 Result result = game.action(player, xPosition, yPosition);
                 System.out.println(result);
                 gameConsole.drawGameField(game);
-                Serializable res = connection.read();
-                player = objectToPlayer((Object[]) res);
-                xPosition = objectToXPosition((Object[]) res);
-                yPosition = objectToYPosition((Object[]) res);
+                TransportObject res = (TransportObject) connection.read();
+                player = res.getPlayer();
+                xPosition = res.getxPosition().intValue();
+                yPosition = res.getyPosition().intValue();
                 result = game.action(player, xPosition, yPosition);
                 System.out.println(result);
 
@@ -180,23 +163,23 @@ public class EnterGameImpl implements EnterGame {
         try {
             connection.connect(host, port);
             while (!(inputParameters.equals(RunGameWithNet.QUIT))) {
-                Serializable res = connection.read();
-                player = objectToPlayer((Object[]) res);
-                int xPosition = objectToXPosition((Object[]) res);
-                int yPosition = objectToYPosition((Object[]) res);
+                TransportObject res = (TransportObject) connection.read();
+                player = res.getPlayer();
+                int xPosition = res.getxPosition().intValue();
+                int yPosition = res.getyPosition().intValue();
                 Result result = game.action(player, xPosition, yPosition);
                 System.out.println(result);
 
                 inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
-                Object[] objectReturn = gameLogic(inputParameters, game, gameConsole, playerType, player, firstMovePlayer);
-                connection.write(objectReturn);
-                player = objectToPlayer(objectReturn);
-                xPosition = objectToXPosition(objectReturn);
-                yPosition = objectToYPosition(objectReturn);
+                TransportObject objectReturn = gameLogic(inputParameters, game, gameConsole, playerType, player, firstMovePlayer);
+                connection.write((Serializable) objectReturn);
+                player = objectReturn.getPlayer();
+                xPosition = objectReturn.getxPosition().intValue();
+                yPosition = objectReturn.getyPosition().intValue();
                 result = game.action(player, xPosition, yPosition);
                 System.out.println(result);
                 gameConsole.drawGameField(game);
-                
+
             }
 
         } catch (SocketConnectionException ex) {

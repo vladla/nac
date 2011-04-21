@@ -1,9 +1,8 @@
 package vladyslav.lubenets.nac;
 
 import vladyslav.lubenets.nac.game.Game;
-import vladyslav.lubenets.nac.game.GameImplement;
 import vladyslav.lubenets.nac.game.Game.Player;
-import vladyslav.lubenets.nac.game.Game.Result;
+import vladyslav.lubenets.nac.game.GameImplement;
 
 public class RunGameWithNet {
     static final String HELLO_MESSAGE = "Please, write your char, x and y coordinates as follow x 1 2.";
@@ -25,15 +24,15 @@ public class RunGameWithNet {
         String inputParameters = "";
         String[] inputParameter;
         String host = "";
-        int port = 0;
+        Integer port = new Integer(0);
         Player playerType;
 
         Game game = new GameImplement();
         GameConsole gameConsole = new GameConsole();
         ConsoleMenu consoleMenu = new ConsoleMenuImpl();
-        Player player = Game.Player.CROSS;
         EnterGame enterGame = new EnterGameImpl();
-        
+
+      
         // **Console menu**    static final String HELLO_MESSAGE = "Please, write your char, x and y coordinates as follow x 1 2.";
 
 
@@ -44,17 +43,17 @@ public class RunGameWithNet {
         // Getting host and port
         inputParameters = consoleMenu.enterParameters(gameType);
 
-        if (!inputParameters.equals("single")) {
+        if (!gameType.equals(GameType.SINGLE)) {
             inputParameter = inputParameters.split(" ");
 
             // Getting host
 
+            if (gameType.equals(GameType.SERVER)) {
+                port = Integer.valueOf(inputParameter[0]);                
+            }
+            if (gameType.equals(GameType.CLIENT)) {
             host = inputParameter[0];
-            if (inputParameter.length > 1) {
-
-                // Getting port
-
-                port = Integer.valueOf(inputParameter[1]);
+            port = Integer.valueOf(inputParameter[1]);
             }
 
         }
@@ -66,11 +65,19 @@ public class RunGameWithNet {
         // Game running
         System.out.println(HELLO_MESSAGE);
 
+        
+        gameType = GameType.CLIENT;
+        playerType = Player.CROSS;
+        port = Integer.valueOf(1234);
+        host = "127.0.0.1";
+        
+        
+
         if (gameType.equals(GameType.CLIENT)) {
-            enterGame.enterGame(game, gameConsole, playerType, port, host);
+            enterGame.enterGame(game, gameConsole, playerType, port.intValue(), host);
         }
         if (gameType.equals(GameType.SERVER)) {
-            enterGame.enterGame(game, gameConsole, playerType, port);
+            enterGame.enterGame(game, gameConsole, playerType, port.intValue());
         }
         if (gameType.equals(GameType.SINGLE)) {
             enterGame.enterGame(game, gameConsole, playerType);

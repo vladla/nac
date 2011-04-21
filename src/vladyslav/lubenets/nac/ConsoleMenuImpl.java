@@ -94,10 +94,10 @@ public class ConsoleMenuImpl implements ConsoleMenu {
             try {
                 brReader = br.readLine();
                 playerType = brReader;
-                if (playerType.equals(Game.Player.CROSS)) {
+                if (playerType.equals("X")) {
                     return Game.Player.CROSS;                    
                 }
-                if (playerType.equals(Game.Player.NOUGHT)) {
+                if (playerType.equals("O")) {
                     return Game.Player.NOUGHT;                    
                 }
                 
