@@ -62,7 +62,7 @@ public class GameConsole {
         try {
             brReader = br.readLine();
         } catch (IOException ex) {
-            return RunGame.QUIT;
+            return RunGameWithNet.QUIT;
         }
         
         return brReader;
