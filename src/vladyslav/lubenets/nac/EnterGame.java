@@ -1,7 +1,6 @@
 package vladyslav.lubenets.nac;
 
 import vladyslav.lubenets.nac.game.Game;
-import vladyslav.lubenets.nac.game.Game.Player;
 
 public interface EnterGame {
 

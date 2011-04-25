@@ -124,46 +124,98 @@ public class EnterGameImpl implements EnterGame {
         System.out.println(RunGameWithNet.THANK_FOR_GAME);
     }
 
+
     public void enterGame(Game game, GameConsole gameConsole, int port) {
 
-        boolean firstMovePlayer = true;
+        boolean firstMovePlayer = false;
         String inputParameters = "";
         Player player = null;
-        SocketConnection connection = null;
-        ConsoleMenu consoleMenu = new ConsoleMenuImpl();
+        SocketConnection socketConnection = new SocketConnectionImpl();
+        Result result = null;
 
         // Getting PlayerType
-        Player playerType = consoleMenu.selectPlayerType();
-
-        // Game running
-        System.out.println(RunGameWithNet.HELLO_MESSAGE);
+        Player playerType = Game.Player.CROSS;
 
         try {
-            connection.accept(port);
+
+            socketConnection.accept(port);
             while (!(inputParameters.equals(RunGameWithNet.QUIT))) {
-                inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
+                if (result != null) {
+                    if (result.equals(Game.Result.NEED_RESTART) || result.equals(Game.Result.CROSSES_WIN) || result.equals(Game.Result.NOUGHTS_WIN)) {
+                        if (!(gameConsole.doMatch(inputParameters))) {
+                            if (!inputParameters.equals(RunGameWithNet.QUIT) && !inputParameters.equals(RunGameWithNet.RESTART)) {
+                                System.out.println(RunGameWithNet.STRING_IS_NOT_VALID);
+                            }
+                        }
+                        if (!inputParameters.equals(RunGameWithNet.RESTART)) {
+                            System.out.println(Game.Result.NEED_RESTART);
+                        }
+                        if (inputParameters.equals(RunGameWithNet.RESTART)) {
+                            result = null;
+                            game.restart();
+                            System.out.println(RunGameWithNet.GAME_RESTARTED);
+                            System.out.println(RunGameWithNet.SERVER_HELLO_MESSAGE);
+                        }
+                        inputParameters = gameConsole.inputString().replaceAll(RunGameWithNet.REG_EXP_REPLACE, " ");
+                        continue;
+                    }
+                }
+                
+                if (result==null) {
+                    System.out.println(RunGameWithNet.SERVER_HELLO_MESSAGE);
+                }
+
+                inputParameters = gameConsole.inputString().replaceAll(RunGameWithNet.REG_EXP_REPLACE, " ");
                 TransportObject objectReturn = gameLogic(inputParameters, game, gameConsole, playerType, player, firstMovePlayer);
-                connection.write(objectReturn);
+                socketConnection.write(objectReturn);
                 player = objectReturn.getPlayer();
                 int xPosition = objectReturn.getxPosition().intValue();
                 int yPosition = objectReturn.getyPosition().intValue();
-                Result result = game.action(player, xPosition, yPosition);
-                System.out.println(result);
+                result = game.action(player, xPosition, yPosition);
                 gameConsole.drawGameField(game);
-                TransportObject res = (TransportObject) connection.read();
+                System.out.println(RunGameWithNet.FROM_SERVER + result);
+                
+                if (result.equals(Game.Result.CONTINUE)) {
+                    System.out.println(RunGameWithNet.SERVER_HELLO_MESSAGE);
+                }
+
+                if (!result.equals(null)) {
+                    if (result.equals(Game.Result.NEED_RESTART) || result.equals(Game.Result.CROSSES_WIN) || result.equals(Game.Result.NOUGHTS_WIN) || result.equals(Game.Result.NOUGHTS_WIN)) {
+                        if (!(gameConsole.doMatch(inputParameters))) {
+                            if (!(inputParameters.equals(RunGameWithNet.QUIT))) {
+                                System.out.println(RunGameWithNet.STRING_IS_NOT_VALID);
+                            }
+                            continue;
+                        }
+
+                        if (inputParameters.equals(RunGameWithNet.RESTART)) {
+                            result = null;
+                            game.restart();
+                            System.out.println(RunGameWithNet.GAME_RESTARTED);
+                            System.out.println(RunGameWithNet.SERVER_HELLO_MESSAGE);
+                            continue;
+                        }
+                        inputParameters = gameConsole.inputString().replaceAll(RunGameWithNet.REG_EXP_REPLACE, " ");
+                        continue;
+                    }
+                }
+
+                TransportObject res = (TransportObject) socketConnection.read();
                 player = res.getPlayer();
                 xPosition = res.getxPosition().intValue();
                 yPosition = res.getyPosition().intValue();
                 result = game.action(player, xPosition, yPosition);
-                System.out.println(result);
+                gameConsole.drawGameField(game);
+                System.out.println(RunGameWithNet.FROM_CLIENT + result);
 
             }
-
+            return;
         } catch (SocketConnectionException ex) {
             ex.printStackTrace();
+        } finally {
+            socketConnection.close();
+            System.out.println(RunGameWithNet.THANK_FOR_GAME);
         }
-
-        System.out.println(RunGameWithNet.THANK_FOR_GAME);
 
     }
 
@@ -189,7 +241,7 @@ public class EnterGameImpl implements EnterGame {
                             }
                         }
                         if (!inputParameters.equals(RunGameWithNet.RESTART)) {
-                            System.out.println("Restart needed");
+                            System.out.println(Game.Result.NEED_RESTART);
                         }
                         if (inputParameters.equals(RunGameWithNet.RESTART)) {
                             result = null;
@@ -197,7 +249,7 @@ public class EnterGameImpl implements EnterGame {
                             System.out.println(RunGameWithNet.GAME_RESTARTED);
                             System.out.println(RunGameWithNet.CLIENT_HELLO_MESSAGE);
                         }
-                        inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
+                        inputParameters = gameConsole.inputString().replaceAll(RunGameWithNet.REG_EXP_REPLACE, " ");
                         continue;
                     }
                 }
@@ -209,12 +261,12 @@ public class EnterGameImpl implements EnterGame {
                 int yPosition = res.getyPosition().intValue();
                 result = game.action(player, xPosition, yPosition);
                 gameConsole.drawGameField(game);
-                System.out.println("From server " + result);
+                System.out.println(RunGameWithNet.FROM_SERVER + result);
                 if (result.equals(Game.Result.CONTINUE)) {
                     System.out.println(RunGameWithNet.CLIENT_HELLO_MESSAGE);
                 }
 
-                if (result != null) {
+                if (!result.equals(null)) {
                     if (result.equals(Game.Result.NEED_RESTART) || result.equals(Game.Result.CROSSES_WIN) || result.equals(Game.Result.NOUGHTS_WIN) || result.equals(Game.Result.NOUGHTS_WIN)) {
                         if (!(gameConsole.doMatch(inputParameters))) {
                             if (!(inputParameters.equals(RunGameWithNet.QUIT))) {
@@ -230,11 +282,11 @@ public class EnterGameImpl implements EnterGame {
                             System.out.println(RunGameWithNet.CLIENT_HELLO_MESSAGE);
                             continue;
                         }
-                        inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
+                        inputParameters = gameConsole.inputString().replaceAll(RunGameWithNet.REG_EXP_REPLACE, " ");
                         continue;
                     }
                 }
-                inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
+                inputParameters = gameConsole.inputString().replaceAll(RunGameWithNet.REG_EXP_REPLACE, " ");
                 TransportObject objectReturn = gameLogic(inputParameters, game, gameConsole, playerType, player, firstMovePlayer);
                 socketConnection.write(objectReturn);
                 player = objectReturn.getPlayer();
@@ -242,7 +294,7 @@ public class EnterGameImpl implements EnterGame {
                 yPosition = objectReturn.getyPosition().intValue();
                 result = game.action(player, xPosition, yPosition);
                 gameConsole.drawGameField(game);
-                System.out.println("From client:" + result);
+                System.out.println(RunGameWithNet.FROM_CLIENT + result);
 
             }
             return;

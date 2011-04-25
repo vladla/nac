@@ -1,20 +1,18 @@
 package vladyslav.lubenets.nac;
 
-import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import vladyslav.lubenets.nac.game.Game;
-import vladyslav.lubenets.nac.game.Game.Player;
 import vladyslav.lubenets.nac.network.FakeServerThread;
 import vladyslav.lubenets.nac.network.SocketConnection;
-import vladyslav.lubenets.nac.network.TransportObject;
 import vladyslav.lubenets.nac.network.SocketConnection.SocketConnectionException;
+import vladyslav.lubenets.nac.network.TransportObject;
 
 public class FakeServerThreadSimpleGameScenario extends Thread {
     private static final Logger LOGGER = Logger.getLogger(FakeServerThread.class.getSimpleName());
 
-    private static final int TIMEOUT_FOR_THE_MAIN_THREAD = 5000;
+//    private static final int TIMEOUT_FOR_THE_MAIN_THREAD = 5000;
     private final SocketConnection connection;
     private final int listenPort;
 

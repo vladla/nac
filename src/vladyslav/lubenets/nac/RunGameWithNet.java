@@ -1,17 +1,12 @@
 package vladyslav.lubenets.nac;
 
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import vladyslav.lubenets.nac.ConsoleMenu.GameType;
 import vladyslav.lubenets.nac.game.Game;
-import vladyslav.lubenets.nac.game.Game.Player;
 import vladyslav.lubenets.nac.game.GameImplement;
-import vladyslav.lubenets.nac.network.FakeServerThread;
 import vladyslav.lubenets.nac.network.SocketConnection;
 import vladyslav.lubenets.nac.network.SocketConnectionImpl;
-import vladyslav.lubenets.nac.network.SocketConnection.SocketConnectionException;
 
 public class RunGameWithNet {
     static final String HELLO_MESSAGE = "Please, write your char, x and y coordinates as follow x 1 2.";
@@ -27,9 +22,9 @@ public class RunGameWithNet {
     static final String GAME_RESTARTED = "Game restarted!";
     static final String CANT_MOVE = "You can't move by this player type!";
 
-    
-    private static final Logger LOGGER = Logger.getLogger(FakeServerThread.class.getSimpleName());
-    private static final int TIMEOUT_FOR_THE_MAIN_THREAD = 5000;
+    // private static final Logger LOGGER =
+    // Logger.getLogger(FakeServerThread.class.getSimpleName());
+
 
     static SocketConnection socketConnection = new SocketConnectionImpl();
     static SocketConnection socketConnectionSlave = new SocketConnectionImpl();
@@ -39,30 +34,27 @@ public class RunGameWithNet {
     public static final int PORT = 1234;
     public static final int BAD_PORT = 1111;
     public static final String CLIENT_HELLO_MESSAGE = "You are playing in client side mode.\nSo, you are playing by nought.\nPlease, enter informaion as follow o 1 2";
+    public static final String SERVER_HELLO_MESSAGE = "You are playing in server side mode.\nSo, you are playing by cross.\nPlease, enter informaion as follow x 1 2";
+    public static final String REG_EXP_REPLACE = "[\\s]{2,}";
+    public static final String FROM_CLIENT = "From client:";
+    public static final String FROM_SERVER = "From server:";
     Serializable fName = "Test transaction";
 
-
-    
-    
     public static void main(String[] args) {
 
-        
-        
         GameType gameType;
         String inputParameters = "";
         String[] inputParameter;
         String host = "";
         Integer port = new Integer(0);
-        Player playerType;
 
         Game game = new GameImplement();
         GameConsole gameConsole = new GameConsole();
         ConsoleMenu consoleMenu = new ConsoleMenuImpl();
         EnterGame enterGame = new EnterGameImpl();
 
-      
-        // **Console menu**    static final String HELLO_MESSAGE = "Please, write your char, x and y coordinates as follow x 1 2.";
-
+        // **Console menu** static final String HELLO_MESSAGE =
+        // "Please, write your char, x and y coordinates as follow x 1 2.";
 
         // Game type selective
 
@@ -77,44 +69,34 @@ public class RunGameWithNet {
             // Getting host
 
             if (gameType.equals(GameType.SERVER)) {
-                port = Integer.valueOf(inputParameter[0]);                
+                port = Integer.valueOf(inputParameter[0]);
             }
             if (gameType.equals(GameType.CLIENT)) {
-            host = inputParameter[0];
-            port = Integer.valueOf(inputParameter[1]);
+                host = inputParameter[0];
+                port = Integer.valueOf(inputParameter[1]);
             }
 
         }
 
-   
         try {
-/*            GameType gameType = GameType.CLIENT;
-            String inputParameters = "";
-            String[] inputParameter;
-            String host = "";
-            Integer port = new Integer(0);
-            Player playerType;
 
-            playerType = Player.CROSS;
-            port = Integer.valueOf(1234);
-            host = "127.0.0.1";
+            if (gameType.equals(GameType.CLIENT)) {
 
-            Game game = new GameImplement();
-            GameConsole gameConsole = new GameConsole();
-            EnterGame enterGame = new EnterGameImpl();
-*/
-            new FakeServerThreadSimpleGameScenario(socketConnectionSlave, port.intValue()).start();
+                // Server for testing client
+                new FakeServerThreadSimpleGameScenario(socketConnectionSlave, port.intValue()).start();
 
+                enterGame.enterGame(game, gameConsole, port.intValue(), host);
+            }
+            if (gameType.equals(GameType.SERVER)) {
 
-        if (gameType.equals(GameType.CLIENT)) {
-            enterGame.enterGame(game, gameConsole, port.intValue(), host);
-        }
-        if (gameType.equals(GameType.SERVER)) {
-            enterGame.enterGame(game, gameConsole, port.intValue());
-        }
-        if (gameType.equals(GameType.SINGLE)) {
-            enterGame.enterGame(game, gameConsole);
-        }
+                // Server for testing client
+                new FakeClientThreadSimpleGameScenario(socketConnectionSlave, port.intValue(), host).start();
+
+                enterGame.enterGame(game, gameConsole, port.intValue());
+            }
+            if (gameType.equals(GameType.SINGLE)) {
+                enterGame.enterGame(game, gameConsole);
+            }
         } finally {
             socketConnection.close();
             socketConnectionSlave.close();
