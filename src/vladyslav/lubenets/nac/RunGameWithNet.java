@@ -38,6 +38,7 @@ public class RunGameWithNet {
     public static final String BAD_HOST = "127.1.2.1";
     public static final int PORT = 1234;
     public static final int BAD_PORT = 1111;
+    public static final String CLIENT_HELLO_MESSAGE = "You are playing in client side mode.\nSo, you are playing by nought.\nPlease, enter informaion as follow o 1 2";
     Serializable fName = "Test transaction";
 
 
@@ -46,7 +47,7 @@ public class RunGameWithNet {
     public static void main(String[] args) {
 
         
-        /*
+        
         GameType gameType;
         String inputParameters = "";
         String[] inputParameter;
@@ -85,15 +86,9 @@ public class RunGameWithNet {
 
         }
 
-        // Getting PlayerType
-
-        playerType = consoleMenu.selectPlayerType();
-
-        // Game running
-        System.out.println(HELLO_MESSAGE);
-*/
+   
         try {
-            GameType gameType = GameType.CLIENT;
+/*            GameType gameType = GameType.CLIENT;
             String inputParameters = "";
             String[] inputParameter;
             String host = "";
@@ -106,24 +101,20 @@ public class RunGameWithNet {
 
             Game game = new GameImplement();
             GameConsole gameConsole = new GameConsole();
-            ConsoleMenu consoleMenu = new ConsoleMenuImpl();
             EnterGame enterGame = new EnterGameImpl();
-
+*/
             new FakeServerThreadSimpleGameScenario(socketConnectionSlave, port.intValue()).start();
-            Thread.sleep(TIMEOUT_FOR_THE_MAIN_THREAD);
-        
+
+
         if (gameType.equals(GameType.CLIENT)) {
-            enterGame.enterGame(game, gameConsole, playerType, port.intValue(), host);
+            enterGame.enterGame(game, gameConsole, port.intValue(), host);
         }
         if (gameType.equals(GameType.SERVER)) {
-            enterGame.enterGame(game, gameConsole, playerType, port.intValue());
+            enterGame.enterGame(game, gameConsole, port.intValue());
         }
         if (gameType.equals(GameType.SINGLE)) {
-            enterGame.enterGame(game, gameConsole, playerType);
+            enterGame.enterGame(game, gameConsole);
         }
-        } catch (InterruptedException ex) {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
         } finally {
             socketConnection.close();
             socketConnectionSlave.close();

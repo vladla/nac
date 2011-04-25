@@ -83,9 +83,7 @@ public class CompliteGameTest extends TestCase {
             String[] inputParameter;
             String host = "";
             Integer port = new Integer(0);
-            Player playerType;
 
-            playerType = Player.CROSS;
             port = Integer.valueOf(1234);
             host = "127.0.0.1";
 
@@ -97,7 +95,7 @@ public class CompliteGameTest extends TestCase {
             new FakeServerThreadSimpleGameScenario(socketConnectionSlave, port.intValue()).start();
             Thread.sleep(TIMEOUT_FOR_THE_MAIN_THREAD);
 
-            enterGame.enterGame(game, gameConsole, playerType, port.intValue(), host);
+            enterGame.enterGame(game, gameConsole, port.intValue(), host);
             assertTrue(true);
         } catch (InterruptedException ex) {
             LOGGER.log(Level.SEVERE, "ERROR", ex);
