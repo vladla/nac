@@ -6,6 +6,7 @@ import vladyslav.lubenets.nac.game.Game;
 import vladyslav.lubenets.nac.game.Game.Player;
 import vladyslav.lubenets.nac.game.Game.Result;
 import vladyslav.lubenets.nac.network.SocketConnection;
+import vladyslav.lubenets.nac.network.SocketConnectionImpl;
 import vladyslav.lubenets.nac.network.SocketConnection.SocketConnectionException;
 import vladyslav.lubenets.nac.network.TransportObject;
 
@@ -130,7 +131,7 @@ public class EnterGameImpl implements EnterGame {
             while (!(inputParameters.equals(RunGameWithNet.QUIT))) {
                 inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
                 TransportObject objectReturn = gameLogic(inputParameters, game, gameConsole, playerType, player, firstMovePlayer);
-                connection.write((Serializable) objectReturn);
+                connection.write(objectReturn);
                 player = objectReturn.getPlayer();
                 int xPosition = objectReturn.getxPosition().intValue();
                 int yPosition = objectReturn.getyPosition().intValue();
@@ -158,35 +159,79 @@ public class EnterGameImpl implements EnterGame {
         boolean firstMovePlayer = true;
         String inputParameters = "";
         Player player = null;
-        final SocketConnection connection = null;
+        SocketConnection socketConnection = new SocketConnectionImpl();
+        Result result = null;
 
         try {
-            connection.connect(host, port);
+            socketConnection.connect(host, port);
             while (!(inputParameters.equals(RunGameWithNet.QUIT))) {
-                TransportObject res = (TransportObject) connection.read();
+                if (result != null) {
+                    if (result.equals(Game.Result.NEED_RESTART) || result.equals(Game.Result.CROSSES_WIN) || result.equals(Game.Result.NOUGHTS_WIN)) {
+                        if (!(gameConsole.doMatch(inputParameters))) {
+                            if (!inputParameters.equals(RunGameWithNet.QUIT) && !inputParameters.equals(RunGameWithNet.RESTART)) {
+                                System.out.println(RunGameWithNet.STRING_IS_NOT_VALID);
+                            }
+                        }
+                        if (!inputParameters.equals(RunGameWithNet.RESTART)) {
+                            System.out.println("Restart needed");
+                        }
+                        if (inputParameters.equals(RunGameWithNet.RESTART)) {
+                            result = null;
+                            game.restart();
+                            System.out.println(RunGameWithNet.GAME_RESTARTED);
+                            System.out.println(RunGameWithNet.HELLO_MESSAGE);
+                        }
+                        inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
+                        continue;
+                    }
+                }
+                gameConsole.drawGameField(game);
+                TransportObject res = (TransportObject) socketConnection.read();
                 player = res.getPlayer();
                 int xPosition = res.getxPosition().intValue();
                 int yPosition = res.getyPosition().intValue();
-                Result result = game.action(player, xPosition, yPosition);
-                System.out.println(result);
+                result = game.action(player, xPosition, yPosition);
+                gameConsole.drawGameField(game);
+                System.out.println("From server " + result);
 
+                if (result != null) {
+                    if (result.equals(Game.Result.NEED_RESTART) || result.equals(Game.Result.CROSSES_WIN) || result.equals(Game.Result.NOUGHTS_WIN) || result.equals(Game.Result.NOUGHTS_WIN)) {
+                        if (!(gameConsole.doMatch(inputParameters))) {
+                            if (!(inputParameters.equals(RunGameWithNet.QUIT))) {
+                                System.out.println(RunGameWithNet.STRING_IS_NOT_VALID);
+                            }
+                            continue;
+                        }
+
+                        if (inputParameters.equals(RunGameWithNet.RESTART)) {
+                            result = null;
+                            game.restart();
+                            System.out.println(RunGameWithNet.GAME_RESTARTED);
+                            System.out.println(RunGameWithNet.HELLO_MESSAGE);
+                            continue;
+                        }
+                        inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
+                        continue;
+                    }
+                }
                 inputParameters = gameConsole.inputString().replaceAll("[\\s]{2,}", " ");
                 TransportObject objectReturn = gameLogic(inputParameters, game, gameConsole, playerType, player, firstMovePlayer);
-                connection.write((Serializable) objectReturn);
+                socketConnection.write(objectReturn);
                 player = objectReturn.getPlayer();
                 xPosition = objectReturn.getxPosition().intValue();
                 yPosition = objectReturn.getyPosition().intValue();
                 result = game.action(player, xPosition, yPosition);
-                System.out.println(result);
                 gameConsole.drawGameField(game);
+                System.out.println(result);
 
             }
-
+            return;
         } catch (SocketConnectionException ex) {
             ex.printStackTrace();
+        } finally {
+            socketConnection.close();
+            System.out.println(RunGameWithNet.THANK_FOR_GAME);
         }
-
-        System.out.println(RunGameWithNet.THANK_FOR_GAME);
 
     }
 }

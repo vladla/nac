@@ -1,9 +1,15 @@
 package vladyslav.lubenets.nac.network;
 
+import java.io.Serializable;
+
 import vladyslav.lubenets.nac.game.Game.Player;
 
-public class TransportObject {
+public class TransportObject implements Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     Player player;
     Integer xPosition;
     Integer yPosition;
