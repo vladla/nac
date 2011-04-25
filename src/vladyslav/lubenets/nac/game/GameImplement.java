@@ -54,7 +54,7 @@ public class GameImplement implements Game {
 					}
 					checkToValues = (field[j][i] == field[j+1][i]);
 					if (checkToValues) {
-					if (field[i][j] == null) {
+					if (field[j][i] == null) {
 						checkToValues = false;
 						break;
 					}

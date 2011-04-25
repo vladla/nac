@@ -259,5 +259,115 @@ public class RunGameTest extends TestCase {
         
     }
 	
-    
+	
+	//**********Scanning all possible variants*****************
+	    //**********All horizontal variants*********
+	
+	   public void testCrossesWin00_20() {
+	        Result result = game.action(Game.Player.CROSS, 0, 0);
+	        assertEquals(Game.Result.CONTINUE, result);
+	        result = game.action(Game.Player.NOUGHT, 0, 1);
+	        assertEquals(Game.Result.CONTINUE, result);
+	        result = game.action(Game.Player.CROSS, 1, 0);
+	        assertEquals(Game.Result.CONTINUE, result);
+	        result = game.action(Game.Player.NOUGHT, 0, 2);
+	        assertEquals(Game.Result.CONTINUE, result);
+	        result = game.action(Game.Player.CROSS, 2, 0);
+	        assertEquals(Game.Result.CROSSES_WIN, result);
+	    }
+
+       public void testCrossesWin01_21() {
+           Result result = game.action(Game.Player.CROSS, 0, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 1, 2);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 1, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 2, 0);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 2, 1);
+           assertEquals(Game.Result.CROSSES_WIN, result);
+       }
+
+       public void testCrossesWin02_22() {
+           Result result = game.action(Game.Player.CROSS, 0, 2);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 1, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 1, 2);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 2, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 2, 2);
+           assertEquals(Game.Result.CROSSES_WIN, result);
+       }
+
+       //**********All vertical variants*********
+
+       public void testCrossesWin00_02() {
+           Result result = game.action(Game.Player.CROSS, 0, 0);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 1, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 0, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 2, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 0, 2);
+           assertEquals(Game.Result.CROSSES_WIN, result);
+       }
+       
+       public void testCrossesWin10_12() {
+           Result result = game.action(Game.Player.CROSS, 1, 0);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 2, 2);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 1, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 2, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 1, 2);
+           assertEquals(Game.Result.CROSSES_WIN, result);
+       }
+
+       public void testCrossesWin20_22() {
+           Result result = game.action(Game.Player.CROSS, 2, 0);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 1, 2);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 2, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 0, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 2, 2);
+           assertEquals(Game.Result.CROSSES_WIN, result);
+       }
+       
+       //**********All diagonal variants*********
+
+       public void testCrossesWin00_22() {
+           Result result = game.action(Game.Player.CROSS, 0, 0);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 1, 2);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 1, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 0, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 2, 2);
+           assertEquals(Game.Result.CROSSES_WIN, result);
+       }
+
+       public void testCrossesWin20_02() {
+           Result result = game.action(Game.Player.CROSS, 2, 0);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 1, 2);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 1, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.NOUGHT, 0, 1);
+           assertEquals(Game.Result.CONTINUE, result);
+           result = game.action(Game.Player.CROSS, 0, 2);
+           assertEquals(Game.Result.CROSSES_WIN, result);
+       }
 }
