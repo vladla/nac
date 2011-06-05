@@ -83,14 +83,12 @@ public class RunGameWithNet {
             if (gameType.equals(GameType.CLIENT)) {
 
                 // Server for testing client
-                new FakeServerThreadSimpleGameScenario(socketConnectionSlave, port.intValue()).start();
 
                 enterGame.enterGame(game, gameConsole, port.intValue(), host);
             }
             if (gameType.equals(GameType.SERVER)) {
 
                 // Server for testing client
-                new FakeClientThreadSimpleGameScenario(socketConnectionSlave, port.intValue(), host).start();
 
                 enterGame.enterGame(game, gameConsole, port.intValue());
             }

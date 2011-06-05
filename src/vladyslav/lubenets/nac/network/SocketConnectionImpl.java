@@ -14,7 +14,7 @@ import java.net.SocketAddress;
 
 public class SocketConnectionImpl implements SocketConnection {
 
-    private static final int TIMEOUT = 5000;
+    private static final int TIMEOUT = 20000;
     private static final String TIMEOUT_MSG = "Timeout!";
     private static final String DATA_IS_NULL = "Data is null!";
     private Socket client;
