@@ -1,7 +1,5 @@
 package vladyslav.lubenets.nac;
 
-import java.io.Serializable;
-
 import vladyslav.lubenets.nac.ConsoleMenu.GameType;
 import vladyslav.lubenets.nac.game.Game;
 import vladyslav.lubenets.nac.game.GameImplement;
@@ -38,7 +36,7 @@ public class RunGameWithNet {
     public static final String REG_EXP_REPLACE = "[\\s]{2,}";
     public static final String FROM_CLIENT = "From client:";
     public static final String FROM_SERVER = "From server:";
-    Serializable fName = "Test transaction";
+//    Serializable fName = "Test transaction";
 
     public static void main(String[] args) {
 
@@ -46,7 +44,7 @@ public class RunGameWithNet {
         String inputParameters = "";
         String[] inputParameter;
         String host = "";
-        Integer port = new Integer(0);
+        Integer port = Integer.valueOf(0);
 
         Game game = new GameImplement();
         GameConsole gameConsole = new GameConsole();

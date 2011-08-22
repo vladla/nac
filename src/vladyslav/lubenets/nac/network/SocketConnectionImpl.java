@@ -68,7 +68,7 @@ public class SocketConnectionImpl implements SocketConnection {
 
     public void write(Serializable data) throws SocketConnectionException {
         ObjectOutputStream oos = null;
-        if (data.equals(null)) throw new NullPointerException(DATA_IS_NULL);
+        if (data == null) throw new NullPointerException(DATA_IS_NULL);
         try {
 
             oos = new ObjectOutputStream(output);
